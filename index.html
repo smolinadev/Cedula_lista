@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cédula Lista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style id="page-style">@page { size: 215.9mm 279.4mm; margin: 0; }</style>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>Cédula Lista</h1>
+      <span class="spec">ID-1 · 85,6 × 54 mm</span>
+    </div>
+    <div class="status" id="cvStatus"><span class="dot" id="cvDot"></span><span id="cvText">Preparando detector…</span></div>
+  </header>
+
+  <div class="layout">
+    <section class="slots" aria-label="Fotos de la cédula">
+      <label class="bigdrop" id="bigdrop" for="file-many">
+        <span class="card-icon" aria-hidden="true"></span>
+        <div>
+          <strong>Suelta aquí las fotos de la cédula</strong>
+          <span>Una o las dos caras, como te las mandaron. Se recortan, se enderezan y se limpian solas.</span>
+        </div>
+        <input type="file" accept="image/*" multiple id="file-many" hidden>
+      </label>
+      <article class="slot" data-side="front">
+        <div class="slot-head">
+          <h2>Frente <small>parte superior de la hoja</small></h2>
+          <span class="chip idle" data-role="chip">Sin foto</span>
+        </div>
+        <div class="drop" data-role="drop">
+          <div class="hint" data-role="hint">
+            <span class="card-icon" aria-hidden="true"></span>
+            <strong>Arrastra la foto del frente</strong>
+            <span>o haz clic para buscarla · también puedes pegarla con Ctrl+V</span>
+          </div>
+          <input type="file" accept="image/*" id="file-front" aria-label="Elegir foto del frente">
+        </div>
+        <div class="slot-actions" data-role="actions" hidden>
+          <button class="btn" data-act="edit">Ajustar bordes</button>
+          <button class="btn" data-act="rotate">Girar 180°</button>
+          <button class="btn" data-act="replace">Cambiar foto</button>
+          <button class="btn ghost" data-act="clear">Quitar</button>
+        </div>
+      </article>
+
+      <article class="slot" data-side="back">
+        <div class="slot-head">
+          <h2>Reverso <small>parte inferior de la hoja</small></h2>
+          <span class="chip idle" data-role="chip">Sin foto</span>
+        </div>
+        <div class="drop" data-role="drop">
+          <div class="hint" data-role="hint">
+            <span class="card-icon" aria-hidden="true"></span>
+            <strong>Arrastra la foto del reverso</strong>
+            <span>o haz clic para buscarla · también puedes pegarla con Ctrl+V</span>
+          </div>
+          <input type="file" accept="image/*" id="file-back" aria-label="Elegir foto del reverso">
+        </div>
+        <div class="slot-actions" data-role="actions" hidden>
+          <button class="btn" data-act="edit">Ajustar bordes</button>
+          <button class="btn" data-act="rotate">Girar 180°</button>
+          <button class="btn" data-act="replace">Cambiar foto</button>
+          <button class="btn ghost" data-act="clear">Quitar</button>
+        </div>
+      </article>
+
+      <div class="foot">
+        <span>Si las caras salen al revés, usa "Intercambiar frente y reverso". Solo toca "Ajustar bordes" si ves la etiqueta amarilla.</span>
+        <button class="btn ghost" id="demoBtn" style="padding:4px 8px;font-size:13px">Probar con una foto de ejemplo</button>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="Impresión">
+      <div class="field">
+        <span class="label">Tamaño de la cédula</span>
+        <div class="seg" role="radiogroup">
+          <input type="radio" name="scale" id="sc100" value="1" checked><label for="sc100">100%<small>85,6×54</small></label>
+          <input type="radio" name="scale" id="sc150" value="1.5"><label for="sc150">150%<small>128×81</small></label>
+          <input type="radio" name="scale" id="sc200" value="2"><label for="sc200">200%<small>171×108</small></label>
+        </div>
+      </div>
+      <div class="field">
+        <span class="label">Hoja</span>
+        <div class="seg" role="radiogroup">
+          <input type="radio" name="paper" id="pCarta" value="carta" checked><label for="pCarta">Carta<small>216×279</small></label>
+          <input type="radio" name="paper" id="pOficio" value="oficio"><label for="pOficio">Oficio<small>216×330</small></label>
+        </div>
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" id="optEnhance" checked> Mejorar contraste y nitidez</label>
+        <label><input type="checkbox" id="optRound" checked> Esquinas redondeadas</label>
+        <label><input type="checkbox" id="optCut"> Líneas de corte</label>
+      </div>
+
+      <div class="sheet-wrap"><div class="sheet" id="sheet"></div></div>
+      <div class="sheet-meta" id="sheetMeta"></div>
+
+      <div class="go">
+        <button class="btn primary big" id="printBtn" disabled>Imprimir</button>
+        <button class="btn big" id="pdfBtn" disabled>Descargar PDF</button>
+        <button class="btn ghost" id="swapBtn">Intercambiar frente y reverso</button>
+        <button class="btn ghost" id="resetBtn">Nueva cédula</button>
+      </div>
+      <p class="note">En la ventana de impresión deja la escala en <b>100%</b> o <b>Predeterminada</b> y márgenes en <b>Ninguno</b>. Si eliges "Ajustar a la página", la cédula sale de otro tamaño.</p>
+    </aside>
+  </div>
+</div>
+
+<!-- Editor de bordes -->
+<div class="editor" id="editor" hidden role="dialog" aria-modal="true" aria-labelledby="edTitle">
+  <div class="editor-box">
+    <div class="editor-head">
+      <div>
+        <h3 id="edTitle">Ajustar bordes</h3>
+        <p>Arrastra cada punto a una esquina de la cédula. La lupa te ayuda a ubicarlo exacto.</p>
+      </div>
+    </div>
+    <div class="editor-stage"><canvas id="edCanvas"></canvas></div>
+    <div class="editor-foot">
+      <div class="left">
+        <button class="btn" id="edAuto">Volver a detectar</button>
+        <button class="btn" id="edFull">Usar foto completa</button>
+      </div>
+      <div class="right">
+        <button class="btn" id="edCancel">Cancelar</button>
+        <button class="btn primary" id="edApply">Aplicar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<div id="print-sheet" aria-hidden="true"></div>
+
+<script src="js/jspdf.umd.min.js"></script>
+<script src="js/opencv.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
